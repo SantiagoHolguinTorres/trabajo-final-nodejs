@@ -1,0 +1,16 @@
+require('../models')
+const sequelize = require('../utils/connection');
+const user = require('./createData/user');
+
+const testMigrate = async () => {
+    try {
+        sequelize.sync();
+        console.log("DB connected 👌");        
+        process.exit()
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+testMigrate();
