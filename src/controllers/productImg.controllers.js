@@ -1,5 +1,7 @@
 const catchError = require('../utils/catchError');
 const ProductImg = require('../models/ProductImg');
+const path = require('path')
+const fs = require('fs')
 
 const getAll = catchError(async(req, res) => {
     const results = await ProductImg.findAll();
@@ -7,14 +9,34 @@ const getAll = catchError(async(req, res) => {
 });
 
 const create = catchError(async(req, res) => {
-    const result = await ProductImg.create(req.body);
-    return res.status(201).json(result);
+
+    const {filename} = req.file
+
+    const validationDB = await ProductImg.findOne({where:{
+        filename
+    }})
+
+    if (validationDB) return res.sendStatus(404)
+    
+    const url = `${req.protocol}://${req.headers.host}/uploads/${filename}`
+
+    const result = await ProductImg.create({filename, url})
+
+     return res.sendStatus(201).json(result)
 });
 
 const remove = catchError(async(req, res) => {
     const { id } = req.params;
-    const result = await ProductImg.destroy({ where: {id} });
-    if(!result) return res.sendStatus(404);
+    
+    const result = await ProductImg.findByPk(id)
+
+    if (!result) return res.sendStatus(404)
+
+    const imageFilePath = path.join(__dirname, '..', 'public', 'uploads', result.filename)
+
+    fs.unlinkSync(imageFilePath)
+    await result.destroy()
+
     return res.sendStatus(204);
 });
 
