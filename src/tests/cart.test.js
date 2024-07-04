@@ -5,7 +5,7 @@ const app = require("../app")
 const Product = require("../models/Product")
 
 const BASE_URL_USERS = "/api/v1/users"
-const BASE_URL = "/api/v1/carts"
+const BASE_URL = "/api/v1/cart"
 
 let TOKEN
 let productBody

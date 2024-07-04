@@ -44,7 +44,7 @@ beforeAll(async () => {
 
   
   await request(app)
-    .post('/api/v1/carts')
+    .post('/api/v1/cart')
     .send(bodyCart)
     .set("Authorization", `Bearer ${TOKEN}`)
 
